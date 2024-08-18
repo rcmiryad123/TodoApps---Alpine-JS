@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <title>Alpine JS</title>
+    <style>
+        .complete {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    
+    <section x-data="todo">
+        <h1> Todo List </h1>
+        <input type="text" x-model="newTodo" @keyup.enter="addTodo" placeholder="Add Todo">
+        <br>
+        <label for="" x-text="newTodo"></label>
+        <ul>
+            <template x-for="todo in todos">
+                <li :class="todo.complete ? 'complete' : ''">
+                    <input type="checkbox" x-model="todo.complete">
+                    <label for="" x-text="todo.title"></label>
+                    <button @click="removeTodo(todo)">X</button>
+                </li>
+            </template>
+        </ul>
+    </section>
+
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('todo', () => ({
+                todos: 
+                [
+                    {
+                        id : 1,
+                        title: 'Learn Alpine JS',
+                        complete : true
+                    },
+                    {
+                        id : 2,
+                        title: 'Kuliah S3',
+                        complete : false
+                    }
+                ],
+                newTodo : '',
+                addTodo() {
+                    if(this.newTodo.length < 1) return;
+                    this.todos.push({
+                        id : this.todos.length + 1,
+                        title : this.newTodo,
+                        complete : false
+                    });
+                    this.newTodo = '';
+                },
+                removeTodo(todo) {
+                    this.todos = this.todos.filter(t => t.id !== todo.id);
+                }
+            }));
+        });
+    </script>
+    
+</body>
+</html>
